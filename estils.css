@@ -1,3 +1,22 @@
+.primera-tabla {
+    margin-right: 20px;
+  }
+
+
+.barco-container {
+    width: 15%;
+    height: 25%;
+    background-color: #999;
+    margin-bottom: 10px;
+    
+}
+
+.barco-container img {
+    width: 100%;
+    
+    
+}
+
 table {
     border-collapse: collapse;
     margin: 20px;
@@ -14,10 +33,10 @@ table td {
     background-color: lightblue;
 }
 
-#color_numerito{
+#color_numerito {
     background-color: lightblue;
 }
 
-.numero{
+.numero {
     background-color: lightgrey;
 }

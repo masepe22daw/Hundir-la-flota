@@ -10,51 +10,60 @@
 <body>
     <h1>Hundir la flota</h1>
 
-    <div>
-        <h2>Tu tablero</h2>
-        <table>
-            <tbody id="tauler-persona">
-                <tr>
-                    <td></td>
-                    <th>A</th>
-                    <th>B</th>
-                    <th>C</th>
-                    <th>D</th>
-                    <th>E</th>
-                    <th>F</th>
-                    <th>G</th>
-                    <th>H</th>
-                    <th>I</th>
-                    <th>J</th>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    
-    <div>
-        <h2>Tablero Maquina</h2>
-        <table>
-            <tbody id="tauler-maquina">
-                <tr>
-                    <td></td>
-                    <th>A</th>
-                    <th>B</th>
-                    <th>C</th>
-                    <th>D</th>
-                    <th>E</th>
-                    <th>F</th>
-                    <th>G</th>
-                    <th>H</th>
-                    <th>I</th>
-                    <th>J</th>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    
+    <div id="tablas-container">
+        <div class="primera-tabla">
+            <h2>Tu tablero</h2>
+            <table>
+                <tbody id="tauler-persona">
+                    <tr>
+                        <td></td>
+                        <th>A</th>
+                        <th>B</th>
+                        <th>C</th>
+                        <th>D</th>
+                        <th>E</th>
+                        <th>F</th>
+                        <th>G</th>
+                        <th>H</th>
+                        <th>I</th>
+                        <th>J</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
 
-    <script src="script.js"></script>
+        <div id="barcos-container">
+            <div class="barco-container"><img src="imatges/boat.png"></div>
+            <div class="barco-container"><img src="imatges/ship.png"></div>
+            <div class="barco-container"><img src="imatges/warship.png"></div>
+            <div class="barco-container"><img src="imatges/battleship.png"></div>
+            <div class="barco-container"><img src="imatges/submarine.png"></div>
+        </div>
+
+        <div>
+            <h2>Tablero de la Maquina</h2>
+            <table>
+                <tbody id="tauler-maquina">
+                    <tr>
+                        <td></td>
+                        <th>A</th>
+                        <th>B</th>
+                        <th>C</th>
+                        <th>D</th>
+                        <th>E</th>
+                        <th>F</th>
+                        <th>G</th>
+                        <th>H</th>
+                        <th>I</th>
+                        <th>J</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="taulers.js"></script>
 </body>
 
 </html>

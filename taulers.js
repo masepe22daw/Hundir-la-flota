@@ -33,4 +33,4 @@ for (let i = 0; i < 10; i++) {
       fila.appendChild(celda);
     }
     taulerMaquina.appendChild(fila);
-  }
+}
