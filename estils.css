@@ -1,32 +1,48 @@
-.primera-tabla {
-    margin-right: 20px;
-  }
-
-
-.barco-container {
-    width: 15%;
-    height: 25%;
-    background-color: #999;
-    margin-bottom: 10px;
-    
+* {
+    margin: 0;
+    padding: 0;
 }
 
-.barco-container img {
-    width: 100%;
-    
-    
+body {
+    margin-top: 1%;
+    margin-left: 3%;
 }
+
+.cuadrado-1 {
+    width: 50px;
+    height: 50px;
+    background-color: red;
+}
+
+.cuadrado-2 {
+    width: 120px;
+    height: 50px;
+    background-color: blue;
+}
+
+.cuadrado-3 {
+    width: 180px;
+    height: 50px;
+    background-color: green;
+}
+
+.cuadrado-4 {
+    width: 240px;
+    height: 50px;
+    background-color: yellow;
+}
+
 
 table {
     border-collapse: collapse;
-    margin: 20px;
+    margin-bottom: 1%;
 }
 
 table th,
 table td {
     border: 1px solid black;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     text-align: center;
     font-weight: bold;
     font-size: 1.2rem;
