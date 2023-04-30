@@ -1,69 +1,29 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Hundir la flota</title>
-    <link rel="stylesheet" href="estils.css">
+    <title>BattleShip</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <h1>Hundir la flota</h1>
-
-    <div id="tablas-container">
-        <div class="primera-tabla">
-            <h2>Tu tablero</h2>
-            <table>
-                <tbody id="tauler-persona">
-                    <tr>
-                        <td></td>
-                        <th>A</th>
-                        <th>B</th>
-                        <th>C</th>
-                        <th>D</th>
-                        <th>E</th>
-                        <th>F</th>
-                        <th>G</th>
-                        <th>H</th>
-                        <th>I</th>
-                        <th>J</th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="cuadrados-container">
-            <div class="cuadrado-1" draggable="true"></div>
-            <div class="cuadrado-2" draggable="true"></div>
-            <div class="cuadrado-3" draggable="true"></div>
-            <div class="cuadrado-4" draggable="true"></div>
-        </div>
-
-
-        <div>
-            <h2>Tablero de la Maquina</h2>
-            <table>
-                <tbody id="tauler-maquina">
-                    <tr>
-                        <td></td>
-                        <th>A</th>
-                        <th>B</th>
-                        <th>C</th>
-                        <th>D</th>
-                        <th>E</th>
-                        <th>F</th>
-                        <th>G</th>
-                        <th>H</th>
-                        <th>I</th>
-                        <th>J</th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div id="jugador">
+      <h2>Tu tablero</h2>
     </div>
+    <div id="barco1" class="barco"></div>
+<div id="barco2" class="barco"></div>
+<div id="barco3" class="barco"></div>
+<div id="barco4" class="barco"></div>
 
-    <script src="taulers.js"></script>
-
-</body>
-
+    <div id="maquina">
+      <h2>Tablero de la máquina</h2>
+    </div>
+  
+    <script src="app.js"></script>
+    <script>
+      crearTablero('jugador', 10, 'jugador');
+      crearTablero('maquina', 10, 'maquina');
+      colocarBarcos();
+    </script>
+  </body>
+  
 </html>
