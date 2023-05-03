@@ -47,3 +47,10 @@ td {
     display: flex;
 }
 
+.tocado{
+    background-color: red;
+}
+
+.agua{
+    background-color: blue;
+}

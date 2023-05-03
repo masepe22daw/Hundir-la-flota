@@ -64,18 +64,17 @@ function dragOver(e) {
 
 function dragEnter(e) {
     e.preventDefault();
-    
+
     this.classList.add('barco');
-    this.dataset.barco = this.id; 
-  }
-  
+    this.dataset.barco = this.id;
+}
+
 
 
 function dragLeave(e) {
     const celda = e.target;
     celda.classList.remove('barco');
 }
-
 
 function drop(e) {
     e.preventDefault();
@@ -86,7 +85,7 @@ function drop(e) {
     const y = parseInt(celda.dataset.y);
     const jugador = celda.dataset.jugador;
     const barco = barcos.find(b => b.nombre === barcoArrastrado.dataset.barco);
-    const tamano = barco.tamano;
+    const tamano = barco.size;
     const direccion = barcoArrastrado.dataset.direccion || 'horizontal';
 
     // Verificar que el barco cabe en la posición
@@ -128,32 +127,16 @@ function drop(e) {
             const celda = tabla.querySelector(`[data-jugador="${jugador}"][data-x="${fila}"][data-y="${columna}"]`);
             celda.classList.add('barco');
             celda.dataset.barco = barcoArrastrado.dataset.barco;
+            celda.dataset.size = tamano;
+            celda.dataset.direction = direccion;
         }
         // Eliminar la clase "dragging
         barcoArrastrado.classList.remove('dragging');
-
-        // Obtener el tamaño del barco arrastrado
-        const tamanoBarco = parseInt(barcoArrastrado.dataset.tamano);
-
-        // Obtener la celda en la que se soltó el barco
-        const celdaInicial = e.target;
-        const xInicial = parseInt(celdaInicial.dataset.x);
-        const yInicial = parseInt(celdaInicial.dataset.y);
-
-        // Obtener la orientación del barco (horizontal o vertical)
-        const orientacion = barcoArrastrado.dataset.orientacion;
-
-        // Aplicar la clase "barco" y el atributo "data-barco" a las celdas correspondientes
-        for (let i = 0; i < tamanoBarco; i++) {
-            const celda = (orientacion === 'horizontal') ? tablero[xInicial][yInicial + i] : tablero[xInicial + i][yInicial];
-            celda.div.classList.add('barco');
-            celda.div.dataset.barco = barco.dataset.nombre;
-
-        }
     }
 }
+
 function crearTablero(id, tamano, jugador) {
-    const tabla = document.createElement('table');
+    const tabla = document.createElement('tabla');
     tabla.classList.add('tablero');
     const letras = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     const filaLetras = document.createElement('tr');
@@ -178,6 +161,9 @@ function crearTablero(id, tamano, jugador) {
             celda.addEventListener('dragenter', dragEnter);
             celda.addEventListener('dragleave', dragLeave);
             celda.addEventListener('drop', drop);
+            celda.addEventListener('click', seleccionarCasilla);
+
+
 
             fila.appendChild(celda);
             if (jugador === 'jugador') {
@@ -273,4 +259,66 @@ function colocarBarcosMaquina() {
             div.dataset.barco = barco.nombre;
         });
     });
+}
+
+function seleccionarCasilla(event) {
+    let turnoJugador = true;
+    const tabla = document.querySelector('.tablero');
+    const celda = event.target;
+    const x = parseInt(celda.dataset.x);
+    const y = parseInt(celda.dataset.y);
+    const jugador = celda.dataset.jugador;
+    const tablero = jugador === 'jugador' ? tableroJugador : tableroMaquina;
+    const casilla = tablero[x][y];
+
+    const audio = new Audio('explosion.mp3');
+    audio.play();
+
+    if (turnoJugador) {
+        // Es el turno del jugador
+        // Marcar la casilla seleccionada
+        casilla.seleccionada = true;
+        if (casilla.barco) {
+            celda.classList.add('tocado');
+
+        } else {
+            celda.classList.add('agua');
+
+        }
+
+        // Esperar un momento antes de permitir que la máquina haga su turno
+        setTimeout(() => {
+            // Cambiar el turno a la máquina
+            turnoJugador = false;
+
+            // Seleccionar una casilla aleatoria para la máquina
+            let casillaAleatoria = null;
+            do {
+                xAleatorio = Math.floor(Math.random() * tablero.length);
+                yAleatorio = Math.floor(Math.random() * tablero[0].length);
+                casillaAleatoria = tablero[xAleatorio][yAleatorio];
+            } while (casillaAleatoria.seleccionada);
+            casillaAleatoria.seleccionada = true;
+
+
+            // Marcar la casilla seleccionada para la máquina
+            const celdaAleatoria = tabla.querySelector(`[data-jugador="jugador"][data-x="${xAleatorio}"][data-y="${yAleatorio}"]`);
+            if (casillaAleatoria.barco) {
+                celdaAleatoria.classList.add('tocada');
+                const audio = new Audio('explosion.mp3');
+                audio.play();
+            } else {
+                celdaAleatoria.classList.add('agua');
+                const audio = new Audio('explosion.mp3');
+                audio.play();
+            }
+
+
+
+            // Cambiar el turno de vuelta al jugador
+            turnoJugador = true;
+        }, 4400);
+    } else {
+        // Es el turno de la máquina, no hacer nada
+    }
 }
