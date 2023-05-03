@@ -3,7 +3,9 @@ const maquina = document.getElementById('maquina');
 const tableroJugador = [];
 const tableroMaquina = [];
 
-let barcoEnMano = null;
+var barcoEnMano = null;
+
+
 
 function crearTablero(id, tamano, jugador) {
     const tabla = document.createElement('table');
@@ -27,20 +29,76 @@ function crearTablero(id, tamano, jugador) {
             celda.dataset.jugador = jugador;
             celda.dataset.x = i.toString();
             celda.dataset.y = j.toString();
-            celda.addEventListener('click', clicEnCelda);
+            celda.ondrop = (event) => {
+                event.preventDefault();
+                const celda = event.target;
+                const x = parseInt(celda.dataset.x);
+                const y = parseInt(celda.dataset.y);
+                const jugador = celda.dataset.jugador;
+                const barco = barcoEnMano.dataset.barco;
+                const size = parseInt(barcoEnMano.dataset.size);
+                const direccion = barcoEnMano.dataset.direccion;
+                colocarBarco(x, y, size, direccion, jugador);
+            };
+
+            celda.ondragover = (event) => {
+                event.preventDefault();
+            }
             fila.appendChild(celda);
             if (jugador === 'jugador') {
-                tableroJugador[i] = tableroJugador[i] || [];
+                tableroJugador[i] = tableroJugador[i] || new Array(tamano);
                 tableroJugador[i][j] = { barco: false, disparado: false, div: celda };
             } else {
                 tableroMaquina[i] = tableroMaquina[i] || [];
                 tableroMaquina[i][j] = { barco: false, disparado: false, div: celda };
             }
         }
+
         tabla.appendChild(fila);
     }
     const contenedor = document.getElementById(id);
     contenedor.appendChild(tabla);
+
+    // Controlador de eventos de dragstart
+    const dragStart = (event) => {
+        barcoEnMano = event.target;
+    };
+
+    // Agregamos el controlador de eventos de dragstart a los contenedores de barcos
+    const contenedoresBarcos = document.querySelectorAll('.contenedor-barco');
+    contenedoresBarcos.forEach(contenedor => {
+        contenedor.addEventListener('dragstart', dragStart);
+    });
+
+    // Controlador de eventos de drop
+    const drop = (event) => {
+        event.preventDefault();
+        const celda = event.target;
+        const x = parseInt(celda.dataset.x);
+        const y = parseInt(celda.dataset.y);
+        const jugador = celda.dataset.jugador;
+        const barco = barcoEnMano.dataset.barco;
+        const size = parseInt(barcoEnMano.dataset.size);
+        const direccion = barcoEnMano.dataset.direccion;
+        colocarBarco(x, y, size, direccion, jugador);
+    };
+
+    // Agregamos el controlador de eventos de drop a las celdas de tablero
+    const celdasTablero = document.querySelectorAll('.tablero td');
+    celdasTablero.forEach(celda => {
+        celda.addEventListener('drop', drop);
+    });
+
+    // Controlador de eventos de dragover
+    const dragOver = (event) => {
+        event.preventDefault();
+    };
+
+    // Agregamos el controlador de eventos de dragover a las celdas de tablero
+    celdasTablero.forEach(celda => {
+        celda.addEventListener('dragover', dragOver);
+    });
+
 }
 
 function crearBarcos() {
@@ -60,11 +118,15 @@ function crearBarcos() {
         size: 2,
         divs: []
     };
-    let randomRow2 = Math.floor(Math.random() * tableroMaquina.length);
-    let randomCol2 = Math.floor(Math.random() * (tableroMaquina.length - 1));
+    let randomRow2, randomCol2;
+    do {
+        randomRow2 = Math.floor(Math.random() * tableroMaquina.length);
+        randomCol2 = Math.floor(Math.random() * (tableroMaquina.length - 1));
+    } while (tableroMaquina[randomRow2][randomCol2].barco || tableroMaquina[randomRow2][randomCol2 + 1].barco);
     for (let i = 0; i < barco2.size; i++) {
         const div = tableroMaquina[randomRow2][randomCol2 + i].div;
         barco2.divs.push(div);
+        tableroMaquina[randomRow2][randomCol2 + i] = { barco: true, disparado: false, div: div };
     }
     // Tercer barco
     const barco3 = {
@@ -72,29 +134,42 @@ function crearBarcos() {
         size: 3,
         divs: []
     };
-    let randomRow3 = Math.floor(Math.random() * tableroMaquina.length);
-    let randomCol3 = Math.floor(Math.random() * (tableroMaquina.length - 2));
+    let randomRow3, randomCol3;
+    do {
+        randomRow3 = Math.floor(Math.random() * (tableroMaquina.length - 2));
+        randomCol3 = Math.floor(Math.random() * tableroMaquina.length);
+    } while (tableroMaquina[randomRow3][randomCol3].barco || tableroMaquina[randomRow3 + 1][randomCol3].barco || tableroMaquina[randomRow3 + 2][randomCol3].barco);
     for (let i = 0; i < barco3.size; i++) {
-        const div = tableroMaquina[randomRow3][randomCol3 + i].div;
+        const div = tableroMaquina[randomRow3 + i][randomCol3].div;
         barco3.divs.push(div);
+        tableroMaquina[randomRow3 + i][randomCol3] = { barco: true, disparado: false, div: div };
     }
-    // Cuarto barco
+
+    // Tercer barco
     const barco4 = {
         nombre: 'barco4',
         size: 4,
         divs: []
     };
-    let randomRow4 = Math.floor(Math.random() * tableroMaquina.length);
-    let randomCol4 = Math.floor(Math.random() * (tableroMaquina.length - 3));
+    let randomRow4, randomCol4;
+    do {
+        randomRow4 = Math.floor(Math.random() * (tableroMaquina.length - 3));
+        randomCol4 = Math.floor(Math.random() * tableroMaquina.length);
+    } while (tableroMaquina[randomRow4][randomCol4].barco || tableroMaquina[randomRow4 + 1][randomCol4].barco || tableroMaquina[randomRow4 + 2][randomCol4].barco);
     for (let i = 0; i < barco4.size; i++) {
-        const div = tableroMaquina[randomRow4][randomCol4 + i].div;
+        const div = tableroMaquina[randomRow4 + i][randomCol4].div;
         barco4.divs.push(div);
+        tableroMaquina[randomRow4 + i][randomCol4] = { barco: true, disparado: false, div: div };
     }
-    barcos.push(barco1, barco2, barco3, barco4);
+    // Agregar los barcos al arreglo de barcos
+    barcos.push(barco1);
+    barcos.push(barco2);
+    barcos.push(barco3);
+    barcos.push(barco4);
     return barcos;
 }
 
-function colocarBarcos() {
+function colocarBarcosMaquina() {
     crearBarcos().forEach(barco => {
         barco.divs.forEach(div => {
             div.classList.add('barco');
@@ -102,46 +177,28 @@ function colocarBarcos() {
         });
     });
 }
-
-
-
-
-jugador.addEventListener('dragover', e => {
-    e.preventDefault();
-});
-
-jugador.addEventListener('drop', e => {
-    const x = e.target.dataset.x;
-    const y = e.target.dataset.y;
-    const barco = barcoEnMano;
-    if (barco && validarBarco(x, y, barco.longitud, 'horizontal')) {
-        colocarBarco(x, y, barco.longitud, 'horizontal', jugador);
-        return false;
-    }
-    else {
-        if (x + longitud > 10) {
-            return false;
-        }
-        for (let i = x; i < x + longitud; i++) {
-            if (tableroJugador[i][y].barco) {
-                return false;
-            }
-        }
-    }
-    return true;
-
-});
-
-
-
-
-function clicEnCelda(event) {
-    const celda = event.target;
-    const jugador = celda.dataset.jugador;
-
-    if (jugador === 'jugador' && !juegoTerminado) {
-        manejarDisparo(celda);
-    }
+function dragStart(event) {
+    barcoEnMano = event.target;
 }
 
-
+function colocarBarco(x, y, size, direccion, jugador) {
+    const barco = { size, direccion, divs: [] };
+    const tabla = jugador === 'jugador' ? tableroJugador : tableroMaquina;
+    if (direccion === 'vertical') {
+        for (let i = 0; i < size; i++) {
+            const celda = tabla[x + i][y].div;
+            celda.classList.add('barco');
+            celda.dataset.barco = barco;
+            barco.divs.push(celda);
+            tabla[x + i][y].barco = barco;
+        }
+    } else {
+        for (let i = 0; i < size; i++) {
+            const celda = tabla[x][y + i].div;
+            celda.classList.add('barco');
+            celda.dataset.barco = barco;
+            barco.divs.push(celda);
+            tabla[x][y + i].barco = barco;
+        }
+    }
+}

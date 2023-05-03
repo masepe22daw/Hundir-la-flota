@@ -1,29 +1,50 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>BattleShip</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="jugador">
-      <h2>Tu tablero</h2>
-    </div>
-    <div id="barco1" class="barco"></div>
-<div id="barco2" class="barco"></div>
-<div id="barco3" class="barco"></div>
-<div id="barco4" class="barco"></div>
 
-    <div id="maquina">
-      <h2>Tablero de la máquina</h2>
+<head>
+  <meta charset="UTF-8">
+  <title>BattleShip</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="jugador">
+    <h2>Tu tablero</h2>
+  </div>
+  <br>
+  <div class="barcos">
+    <div class="contenedor-barco" >
+      <div id="barco1" class="barco" data-jugador="jugador" data-barco="barco1"></div>
     </div>
-  
-    <script src="app.js"></script>
-    <script>
-      crearTablero('jugador', 10, 'jugador');
-      crearTablero('maquina', 10, 'maquina');
-      colocarBarcos();
-    </script>
-  </body>
-  
+    <div class="contenedor-barco" draggable="true">
+      <div id="barco2" class="barco" data-jugador="jugador" data-barco="barco2"></div>
+      <div id="barco2" class="barco" data-jugador="jugador" data-barco="barco2"></div>
+    </div>
+    <div class="contenedor-barco" draggable="true">
+      <div id="barco3" class="barco" data-jugador="jugador" data-barco="barco3"></div>
+      <div id="barco3" class="barco" data-jugador="jugador" data-barco="barco3"></div>
+      <div id="barco3" class="barco" data-jugador="jugador" data-barco="barco3"></div>
+    </div>
+    <div class="contenedor-barco" draggable="true">
+      <div id="barco4" class="barco" data-jugador="jugador" data-barco="barco4"></div>
+      <div id="barco4" class="barco" data-jugador="jugador" data-barco="barco4"></div>
+      <div id="barco4" class="barco" data-jugador="jugador" data-barco="barco4"></div>
+      <div id="barco4" class="barco" data-jugador="jugador" data-barco="barco4"></div>
+    </div>
+  </div>
+
+
+
+  <div id="maquina">
+    <h2>Tablero de la máquina</h2>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    crearTablero('jugador', 10, 'jugador');
+    crearTablero('maquina', 10, 'maquina');
+    colocarBarcosMaquina();
+  </script>
+</body>
+
 </html>
