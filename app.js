@@ -5,7 +5,71 @@ const tableroMaquina = [];
 
 var barcoEnMano = null;
 
+// Seleccionar la tabla y los contenedores de barco
+const tabla = document.querySelector('.tablero');
+const contenedoresBarco = document.querySelectorAll('.contenedor-barco');
 
+// Agregar event listeners a los contenedores de barco
+contenedoresBarco.forEach(contenedor => {
+    contenedor.addEventListener('dragstart', dragStart);
+    contenedor.addEventListener('dragend', dragEnd);
+});
+
+
+
+// Funciones de arrastrar el barco
+function dragStart() {
+    // Obtiene los datos del barco a través del atributo "data-barco" en el contenedor
+    const barco = this.dataset.barco;
+
+    // Crea un nuevo elemento de barco con las propiedades correspondientes
+    const barcoArrastrado = document.createElement('div');
+    barcoArrastrado.classList.add('barco'); // Agrega la clase "barco" al elemento
+    barcoArrastrado.dataset.barco = barco;
+
+    // Agrega el nuevo elemento de barco a la página
+    document.body.appendChild(barcoArrastrado);
+
+    // Agrega la clase "dragging" para marcar que el elemento está siendo arrastrado
+    this.classList.add('dragging');
+}
+
+
+
+function dragEnd() {
+    this.classList.remove('dragging');
+}
+
+// Funciones de soltar el barco en la tabla
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function dragEnter(e) {
+    e.preventDefault();
+    this.classList.add('barco');
+}
+
+function dragLeave(e) {
+    const celda = e.target;
+    celda.classList.remove('barco');
+}
+
+
+function drop(e) {
+    e.preventDefault();
+    const barcoArrastrado = document.querySelector('.dragging');
+    console.log(barcoArrastrado); // imprimir el elemento arrastrado
+    const tabla = e.target;
+    tabla.appendChild(barcoArrastrado);
+    barcoArrastrado.classList.remove('dragging');
+    const celda = e.target;
+    celda.classList.remove('over');
+    tabla.classList.add('over');
+
+    // Agrega la clase "barco" al elemento arrastrado para visualizarlo en la tabla
+    barcoArrastrado.classList.add('barco');
+}
 
 function crearTablero(id, tamano, jugador) {
     const tabla = document.createElement('table');
@@ -29,21 +93,12 @@ function crearTablero(id, tamano, jugador) {
             celda.dataset.jugador = jugador;
             celda.dataset.x = i.toString();
             celda.dataset.y = j.toString();
-            celda.ondrop = (event) => {
-                event.preventDefault();
-                const celda = event.target;
-                const x = parseInt(celda.dataset.x);
-                const y = parseInt(celda.dataset.y);
-                const jugador = celda.dataset.jugador;
-                const barco = barcoEnMano.dataset.barco;
-                const size = parseInt(barcoEnMano.dataset.size);
-                const direccion = barcoEnMano.dataset.direccion;
-                colocarBarco(x, y, size, direccion, jugador);
-            };
+            celda.addEventListener('dragover', dragOver);
+            celda.addEventListener('dragenter', dragEnter);
+            celda.addEventListener('dragleave', dragLeave);
+            celda.addEventListener('drop', drop);
+            celda.addEventListener('dragleave', dragLeave);
 
-            celda.ondragover = (event) => {
-                event.preventDefault();
-            }
             fila.appendChild(celda);
             if (jugador === 'jugador') {
                 tableroJugador[i] = tableroJugador[i] || new Array(tamano);
@@ -58,46 +113,6 @@ function crearTablero(id, tamano, jugador) {
     }
     const contenedor = document.getElementById(id);
     contenedor.appendChild(tabla);
-
-    // Controlador de eventos de dragstart
-    const dragStart = (event) => {
-        barcoEnMano = event.target;
-    };
-
-    // Agregamos el controlador de eventos de dragstart a los contenedores de barcos
-    const contenedoresBarcos = document.querySelectorAll('.contenedor-barco');
-    contenedoresBarcos.forEach(contenedor => {
-        contenedor.addEventListener('dragstart', dragStart);
-    });
-
-    // Controlador de eventos de drop
-    const drop = (event) => {
-        event.preventDefault();
-        const celda = event.target;
-        const x = parseInt(celda.dataset.x);
-        const y = parseInt(celda.dataset.y);
-        const jugador = celda.dataset.jugador;
-        const barco = barcoEnMano.dataset.barco;
-        const size = parseInt(barcoEnMano.dataset.size);
-        const direccion = barcoEnMano.dataset.direccion;
-        colocarBarco(x, y, size, direccion, jugador);
-    };
-
-    // Agregamos el controlador de eventos de drop a las celdas de tablero
-    const celdasTablero = document.querySelectorAll('.tablero td');
-    celdasTablero.forEach(celda => {
-        celda.addEventListener('drop', drop);
-    });
-
-    // Controlador de eventos de dragover
-    const dragOver = (event) => {
-        event.preventDefault();
-    };
-
-    // Agregamos el controlador de eventos de dragover a las celdas de tablero
-    celdasTablero.forEach(celda => {
-        celda.addEventListener('dragover', dragOver);
-    });
 
 }
 
@@ -176,9 +191,6 @@ function colocarBarcosMaquina() {
             div.dataset.barco = barco.nombre;
         });
     });
-}
-function dragStart(event) {
-    barcoEnMano = event.target;
 }
 
 function colocarBarco(x, y, size, direccion, jugador) {
