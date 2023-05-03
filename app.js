@@ -34,8 +34,49 @@ const barco4 = {
 
 barcos.push(barco1, barco2, barco3, barco4);
 
+// instancia de IndexedDB
+const DB_NAME = 'BattleshipDB';
+const DB_VERSION = 1;
 
-var barcoEnMano = null;
+const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+request.onerror = function (event) {
+    console.log("Error al abrir la base de datos");
+};
+
+request.onupgradeneeded = function (event) {
+    const db = event.target.result;
+
+    // Crear la tabla "barcos"
+    const objectStore = db.createObjectStore("barcos", { keyPath: "nombre" });
+
+    // Crear los índices
+    objectStore.createIndex("size", "size", { unique: false });
+};
+
+request.onsuccess = function (event) {
+    const db = event.target.result;
+
+    // Agregar los barcos a la base de datos
+    const transaction = db.transaction("barcos", "readwrite");
+    const objectStore = transaction.objectStore("barcos");
+
+    barcos.forEach(function (barco) {
+        const request = objectStore.add(barco);
+        request.onerror = function (event) {
+            console.log("Error al agregar el barco: " + barco.nombre);
+        };
+        request.onsuccess = function (event) {
+            console.log("Barco agregado: " + barco.nombre);
+        };
+    });
+
+    transaction.oncomplete = function (event) {
+        console.log("Barcos guardados en la base de datos");
+    };
+};
+
+
 
 // Seleccionar la tabla y los contenedores de barco
 const tabla = document.querySelector('.tablero');
@@ -66,7 +107,6 @@ function dragEnter(e) {
     e.preventDefault();
 
     this.classList.add('barco');
-    this.dataset.barco = this.id;
 }
 
 
@@ -129,6 +169,7 @@ function drop(e) {
             celda.dataset.barco = barcoArrastrado.dataset.barco;
             celda.dataset.size = tamano;
             celda.dataset.direction = direccion;
+
         }
         // Eliminar la clase "dragging
         barcoArrastrado.classList.remove('dragging');
@@ -248,6 +289,9 @@ function crearBarcos() {
     barcos.push(barco6);
     barcos.push(barco7);
     barcos.push(barco8);
+    
+    // Ordenar los barcos por tamaño, de mayor a menor
+    barcos.sort((a, b) => b.size - a.size);
     console.log(barcos);
     return barcos;
 }
@@ -263,6 +307,7 @@ function colocarBarcosMaquina() {
 
 function seleccionarCasilla(event) {
     let turnoJugador = true;
+    let turnoMaquina = false; // Nueva variable para el turno de la máquina
     const tabla = document.querySelector('.tablero');
     const celda = event.target;
     const x = parseInt(celda.dataset.x);
@@ -280,16 +325,15 @@ function seleccionarCasilla(event) {
         casilla.seleccionada = true;
         if (casilla.barco) {
             celda.classList.add('tocado');
-
         } else {
             celda.classList.add('agua');
-
         }
 
         // Esperar un momento antes de permitir que la máquina haga su turno
         setTimeout(() => {
             // Cambiar el turno a la máquina
             turnoJugador = false;
+            turnoMaquina = true; // Establecer el turno de la máquina en true
 
             // Seleccionar una casilla aleatoria para la máquina
             let casillaAleatoria = null;
@@ -300,11 +344,10 @@ function seleccionarCasilla(event) {
             } while (casillaAleatoria.seleccionada);
             casillaAleatoria.seleccionada = true;
 
-
             // Marcar la casilla seleccionada para la máquina
             const celdaAleatoria = tabla.querySelector(`[data-jugador="jugador"][data-x="${xAleatorio}"][data-y="${yAleatorio}"]`);
             if (casillaAleatoria.barco) {
-                celdaAleatoria.classList.add('tocada');
+                celdaAleatoria.classList.add('tocado');
                 const audio = new Audio('explosion.mp3');
                 audio.play();
             } else {
@@ -313,10 +356,12 @@ function seleccionarCasilla(event) {
                 audio.play();
             }
 
-
-
             // Cambiar el turno de vuelta al jugador
+            turnoMaquina = false; // Establecer el turno de la máquina en false
             turnoJugador = true;
+
+            turnoJugador;
+
         }, 4400);
     } else {
         // Es el turno de la máquina, no hacer nada
