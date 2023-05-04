@@ -1,6 +1,36 @@
+
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #fff;
+}
+
+
 table {
     border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 16px;
 }
+
+th,
+td {
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
 
 td {
     width: 30px;
@@ -19,38 +49,38 @@ td {
     width: 30px;
     height: 30px;
     background-color: gray;
-    
+
 }
 
 #barco2 {
     width: 60px;
     height: 30px;
     background-color: gray;
-    
+
 }
 
 #barco3 {
     width: 90px;
     height: 30px;
     background-color: gray;
-    
+
 }
 
 #barco4 {
     width: 120px;
     height: 30px;
     background-color: gray;
-    
+
 }
 
-.barcos{
+.barcos {
     display: flex;
 }
 
-.tocado{
+.tocado {
     background-color: red;
 }
 
-.agua{
+.agua {
     background-color: blue;
 }

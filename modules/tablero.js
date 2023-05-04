@@ -193,7 +193,7 @@ export function seleccionarCasilla(event) {
 
             turnoJugador;
 
-        }, 4400);
+        }, 4000);
     } else {
         // Es el turno de la máquina, no hacer nada
     }
