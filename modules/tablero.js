@@ -1,10 +1,11 @@
 //tablero.js
-import  {dragOver,dragEnter, dragLeave,drop } from './drag-and-drop.js'
+import { dragOver, dragEnter, dragLeave, drop } from './drag-and-drop.js'
 
 export const tableroJugador = [];
 export const tableroMaquina = [];
-export const barcos = [];
+const barcos = [];
 
+//sintaxis de objeto JS basada en prototipado para definir métodos y atributos en las celdas del tablero
 export function crearTablero(id, tamano, jugador) {
     const tabla = document.createElement('tabla');
     tabla.classList.add('tablero');
@@ -52,23 +53,28 @@ export function crearTablero(id, tamano, jugador) {
 
 }
 
-export function crearBarcos() {
-    // Primer barco
-    const barco5 = {
-        nombre: 'barco5',
-        size: 1,
-        divs: []
-    };
+export const crearBarcos = () => {
+    class Barco {
+        constructor(nombre, size, divs) {
+            this.nombre = nombre;
+            this.size = size;
+            this.divs = divs;
+        }
+    }
+
+    const barco1 = new Barco('barco1', 1, []);
+    const barco2 = new Barco('barco2', 2, []);
+    const barco3 = new Barco('barco3', 3, []);
+    const barco4 = new Barco('barco4', 4, []);
+
+    barcos.push(barco1, barco2, barco3, barco4);
+
+    const barco5 = new Barco('barco5', 1, []);
     const randomRow = Math.floor(Math.random() * tableroMaquina.length);
     const randomCol = Math.floor(Math.random() * tableroMaquina.length);
     barco5.divs.push(tableroMaquina[randomRow][randomCol].div);
 
-    // Segundo barco
-    const barco6 = {
-        nombre: 'barco6',
-        size: 2,
-        divs: []
-    };
+    const barco6 = new Barco('barco6', 2, []);
     let randomRow2, randomCol2;
     do {
         randomRow2 = Math.floor(Math.random() * tableroMaquina.length);
@@ -79,12 +85,8 @@ export function crearBarcos() {
         barco6.divs.push(div);
         tableroMaquina[randomRow2][randomCol2 + i] = { barco: true, div: div };
     }
-    // Tercer barco
-    const barco7 = {
-        nombre: 'barco7',
-        size: 3,
-        divs: []
-    };
+
+    const barco7 = new Barco('barco7', 3, []);
     let randomRow3, randomCol3;
     do {
         randomRow3 = Math.floor(Math.random() * (tableroMaquina.length - 2));
@@ -96,12 +98,7 @@ export function crearBarcos() {
         tableroMaquina[randomRow3 + i][randomCol3] = { barco: true, div: div };
     }
 
-    // Tercer barco
-    const barco8 = {
-        nombre: 'barco8',
-        size: 4,
-        divs: []
-    };
+    const barco8 = new Barco('barco8', 4, []);
 
     let randomRow4, randomCol4;
     do {
@@ -113,19 +110,19 @@ export function crearBarcos() {
         barco8.divs.push(div);
         tableroMaquina[randomRow4 + i][randomCol4] = { barco: true, div: div };
     }
-    // Agregar los barcos al arreglo de barcos
-    barcos.push(barco5);
-    barcos.push(barco6);
-    barcos.push(barco7);
-    barcos.push(barco8);
-    
+
+
+    barcos.push(barco5, barco6, barco7, barco8);
+    localStorage.setItem('barcos', JSON.stringify(barcos));
+
     // Ordenar los barcos por tamaño, de mayor a menor
     barcos.sort((a, b) => b.size - a.size);
     console.log(barcos);
+
     return barcos;
 }
 
-export function colocarBarcosMaquina() {
+export const colocarBarcosMaquina = () => {
     crearBarcos().forEach(barco => {
         barco.divs.forEach(div => {
             div.classList.add('barco');
@@ -135,7 +132,8 @@ export function colocarBarcosMaquina() {
 }
 
 
-export function seleccionarCasilla(event) {
+//Genera dinamicamente
+export const seleccionarCasilla = (event) => {
     let turnoJugador = true;
     let turnoMaquina = false; // Nueva variable para el turno de la máquina
     const tabla = document.querySelector('.tablero');
@@ -143,15 +141,16 @@ export function seleccionarCasilla(event) {
     const x = parseInt(celda.dataset.x);
     const y = parseInt(celda.dataset.y);
     const jugador = celda.dataset.jugador;
+
+    //Operador ternario
     const tablero = jugador === 'jugador' ? tableroJugador : tableroMaquina;
+
     const casilla = tablero[x][y];
 
     const audio = new Audio('explosion.mp3');
     audio.play();
 
     if (turnoJugador) {
-        // Es el turno del jugador
-        // Marcar la casilla seleccionada
         casilla.seleccionada = true;
         if (casilla.barco) {
             celda.classList.add('tocado');
@@ -159,14 +158,14 @@ export function seleccionarCasilla(event) {
             celda.classList.add('agua');
         }
 
-        // Esperar un momento antes de permitir que la máquina haga su turno
+
         setTimeout(() => {
             let xAleatorio, yAleatorio;
-            // Cambiar el turno a la máquina
-            turnoJugador = false;
-            turnoMaquina = true; // Establecer el turno de la máquina en true
 
-            // Seleccionar una casilla aleatoria para la máquina
+            turnoJugador = false;
+            turnoMaquina = true;
+
+
             let casillaAleatoria = null;
             do {
                 xAleatorio = Math.floor(Math.random() * tablero.length);
@@ -175,7 +174,7 @@ export function seleccionarCasilla(event) {
             } while (casillaAleatoria.seleccionada);
             casillaAleatoria.seleccionada = true;
 
-            // Marcar la casilla seleccionada para la máquina
+
             const celdaAleatoria = tabla.querySelector(`[data-jugador="jugador"][data-x="${xAleatorio}"][data-y="${yAleatorio}"]`);
             if (casillaAleatoria.barco) {
                 celdaAleatoria.classList.add('tocado');
@@ -187,15 +186,14 @@ export function seleccionarCasilla(event) {
                 audio.play();
             }
 
-            // Cambiar el turno de vuelta al jugador
-            turnoMaquina = false; // Establecer el turno de la máquina en false
+
+            turnoMaquina = false;
             turnoJugador = true;
 
             turnoJugador;
 
         }, 4000);
     } else {
-        // Es el turno de la máquina, no hacer nada
+        // Es el turno de la máquina, no hace nada
     }
 }
-

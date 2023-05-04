@@ -34,49 +34,6 @@ const barco4 = {
 
 barcos.push(barco1, barco2, barco3, barco4);
 
-// instancia de IndexedDB
-const DB_NAME = 'BattleshipDB';
-const DB_VERSION = 1;
-
-const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-request.onerror = function (event) {
-    console.log("Error al abrir la base de datos");
-};
-
-request.onupgradeneeded = function (event) {
-    const db = event.target.result;
-
-    // Crear la tabla "barcos"
-    const objectStore = db.createObjectStore("barcos", { keyPath: "nombre" });
-
-    // Crear los índices
-    objectStore.createIndex("size", "size", { unique: false });
-};
-
-request.onsuccess = function (event) {
-    const db = event.target.result;
-
-    // Agregar los barcos a la base de datos
-    const transaction = db.transaction("barcos", "readwrite");
-    const objectStore = transaction.objectStore("barcos");
-
-    barcos.forEach(function (barco) {
-        const request = objectStore.add(barco);
-        request.onerror = function (event) {
-            console.log("Error al agregar el barco: " + barco.nombre);
-        };
-        request.onsuccess = function (event) {
-            console.log("Barco agregado: " + barco.nombre);
-        };
-    });
-
-    transaction.oncomplete = function (event) {
-        console.log("Barcos guardados en la base de datos");
-    };
-};
-
-
 
 // Seleccionar la tabla y los contenedores de barco
 const tabla = document.querySelector('.tablero');

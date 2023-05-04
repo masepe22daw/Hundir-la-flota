@@ -1,11 +1,13 @@
 //drag-and-drop.js
-import {tableroJugador,tableroMaquina, barcos} from './tablero.js'
+import {tableroJugador,tableroMaquina} from './tablero.js'
 
-// Seleccionar la tabla y los contenedores de barco
+const barcos = JSON.parse(localStorage.getItem('barcos'));
+
+
 const tabla = document.querySelector('.tablero');
 const contenedoresBarco = document.querySelectorAll('.barco');
 
-// Agregar event listeners a los contenedores de barco
+
 contenedoresBarco.forEach(contenedor => {
     contenedor.addEventListener('dragstart', dragStart);
     contenedor.addEventListener('dragend', dragEnd);
