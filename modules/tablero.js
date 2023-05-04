@@ -115,9 +115,25 @@ export const crearBarcos = () => {
     barcos.push(barco5, barco6, barco7, barco8);
     localStorage.setItem('barcos', JSON.stringify(barcos));
 
-    // Ordenar los barcos por tamaño, de mayor a menor
-    barcos.sort((a, b) => b.size - a.size);
+
+    barcos.sort((a, b) => a.size - b.size);
+    console.log("Ordena los barcos por tamaño:");
     console.log(barcos);
+
+    const primerosDosBarcos = barcos.slice(0, 2);
+    console.log(primerosDosBarcos);
+
+    const nombresDeBarcos = barcos.map((barco) => barco.nombre);
+    console.log("Nombre de los barcos:");
+    console.log(nombresDeBarcos);
+
+    const sumaDeTamaños = barcos.reduce((acumulado, barco) => acumulado + barco.size, 0);
+    console.log("Suma de los tamaños:");
+    console.log(sumaDeTamaños);
+
+    const barcosLargos = barcos.filter((barco) => barco.size > 3);
+    console.log("Barcos Largos:");
+    console.log(barcosLargos);
 
     return barcos;
 }
@@ -135,7 +151,7 @@ export const colocarBarcosMaquina = () => {
 //Genera dinamicamente
 export const seleccionarCasilla = (event) => {
     let turnoJugador = true;
-    let turnoMaquina = false; 
+    let turnoMaquina = false;
     const tabla = document.querySelector('.tablero');
     const celda = event.target;
     const x = parseInt(celda.dataset.x);
@@ -192,7 +208,7 @@ export const seleccionarCasilla = (event) => {
 
             turnoJugador;
 
-        }, 3800);
+        }, 2400);
     } else {
         // Es el turno de la máquina, no hace nada
     }
