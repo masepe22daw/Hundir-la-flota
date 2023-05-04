@@ -135,7 +135,7 @@ export const colocarBarcosMaquina = () => {
 //Genera dinamicamente
 export const seleccionarCasilla = (event) => {
     let turnoJugador = true;
-    let turnoMaquina = false; // Nueva variable para el turno de la máquina
+    let turnoMaquina = false; 
     const tabla = document.querySelector('.tablero');
     const celda = event.target;
     const x = parseInt(celda.dataset.x);
@@ -192,7 +192,7 @@ export const seleccionarCasilla = (event) => {
 
             turnoJugador;
 
-        }, 4000);
+        }, 3800);
     } else {
         // Es el turno de la máquina, no hace nada
     }

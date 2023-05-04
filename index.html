@@ -8,24 +8,33 @@
 </head>
 
 <body>
-  <canvas id="canvas" width="150" height="150"></canvas>
+  <script src="logo.js"></script>
+  <script>
+    preloadImage('logo.png');
+  </script>
+  <h1>Battleship</h1>
+  <img id="logo" class="imagen" draggable="false" src="logo.png">
+
+  <div class="giga-contenedor">
   <div id="jugador">
     <h2>Tablero del jugador</h2>
+    <div class="barcos">
+      <div id="barco1" class="barco" draggable="true" data-barco="barco1"></div>
+      <div id="barco2" class="barco" draggable="true" data-barco="barco2"></div>
+      <div id="barco3" class="barco" draggable="true" data-barco="barco3"></div>
+      <div id="barco4" class="barco" draggable="true" data-barco="barco4"></div>
+      <br><br>
+    </div>
   </div>
   <br>
 
-  <div class="barcos">
-    <div id="barco1" class="barco" draggable="true" data-barco="barco1"></div>
-    <div id="barco2" class="barco" draggable="true" data-barco="barco2"></div>
-    <div id="barco3" class="barco" draggable="true" data-barco="barco3"></div>
-    <div id="barco4" class="barco" draggable="true" data-barco="barco4"></div>
-  </div>
+  
 
   <div id="maquina">
     <h2>Tablero de la máquina</h2>
   </div>
-
-  <script  src="logo.js"></script>
+  </div>
+  <script type="module" src="logo.js"></script>
   <script type="module" src="/modules/tablero.js"></script>
   <script type="module" src="/modules/drag-and-drop.js"></script>
 
