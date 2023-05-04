@@ -24,12 +24,11 @@
     <h2>Tablero de la máquina</h2>
   </div>
 
-  <script src="app.js"></script>
-  <script>
-    crearTablero('jugador', 10, 'jugador');
-    crearTablero('maquina', 10, 'maquina');
-    colocarBarcosMaquina();
-  </script>
+  <script type="module" src="/modules/tablero.js"></script>
+  <script type="module" src="/modules/drag-and-drop.js"></script>
+  <script type="module" src="/modules/indexDB.js"></script>
+
+  <script type="module" src="app.js"></script>
 </body>
 
 </html>
